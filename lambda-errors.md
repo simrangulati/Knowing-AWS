@@ -6,11 +6,13 @@ The package is too large (334MB) - AWS Lambda has a 250MB limit! This is common 
 
 ## 2. Pandas not found - Unable to import
 
-`RUNTIME=$(aws lambda get-function-configuration \
+```bash
+RUNTIME=$(aws lambda get-function-configuration \
             --function-name omnis-web-data-gen  \
-            --query 'Runtime' --output text)`
+            --query 'Runtime' --output text)
+echo "Detected runtime: $RUNTIME"
+```
 
-`echo "Detected runtime: $RUNTIME"`
 `#Detected runtime: python3.13`
 
 ### 2.1 Your Lambda runtime is Python 3.13, but your existing layer is built for Python 3.9 — that’s why the error occurs:
@@ -32,15 +34,20 @@ No module named 'pandas' happens because /opt/python/lib/python3.9/site-packages
 ### Solution 
 
 # Update the handler to point to the correct file and function
-`aws lambda update-function-configuration \
+```bash
+aws lambda update-function-configuration \
     --function-name omnis-web-data-gen \
     --handler lambda_handler.lambda_handler`
+```
 
 📌 In short:
+``` bash
 
-`aws lambda update-function-configuration \
+aws lambda update-function-configuration \
   --function-name my-lambda-function \
   --handler my_module.my_function`
+
+```
   
 This tells AWS Lambda:
 
